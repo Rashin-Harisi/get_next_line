@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 16:03:12 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/11/10 16:08:39 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/11/10 16:55:55 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -14,8 +14,3 @@
 char	*get_next_line(int fd)
 {}
 
-
-int main()
-{
-	return 0;
-}
