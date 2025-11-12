@@ -12,13 +12,15 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-
+#include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
-#include <fcntl.h>
-
 
 char	*get_next_line(int fd);
-
+int	read_handler(int fd,char *buf, int n);
+int	is_newline_exist(char *buf);
+int	ft_strlen(char *str);
+char	*join_helper(char *buf_s, char *buf);
+char	*remove_extra_space_handler(char *buf);
+char *extract_line_handler(char *buf_s);
 
 #endif

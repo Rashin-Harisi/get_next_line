@@ -1,17 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/10 16:03:33 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/11/10 16:03:33 by rabdolho         ###   ########.fr       */
+/*   Created: 2025/11/10 16:56:02 by rabdolho          #+#    #+#             */
+/*   Updated: 2025/11/11 17:11:52 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-int	read_handler(int fd,char *buf, int n)
+extern int errno;
+
+int	read_handler(int fd,char *buf,int n)
 {
 	int sz;
 
@@ -26,8 +31,6 @@ int	is_newline_exist(char *buf)
 	int i;
 
 	i = 0;
-    if (buf == NULL)
-        return (0);
 	while (buf[i] != '\0')
 	{
 		if (buf[i] == '\n')
@@ -127,4 +130,44 @@ char *extract_line_handler(char *buf_s)
 	}
 	line[j] = '\0';
 	return (line);
+}
+
+int main()
+{
+	int fd;
+	int sz;
+	char *buf;
+	static char *buf_s;
+	char *new;
+
+	buf = malloc(100 * sizeof(char));
+	buf_s = NULL;
+
+	fd = open("text.txt", O_RDONLY);
+	printf("open the fd = %d \n",fd);
+	if (fd == -1)
+	{
+		printf("Error Number %d\n",errno);
+		perror("Program");
+	}
+	int i = 1;
+	while (read_handler(fd,buf,15) > 0)
+	{
+		buf_s = join_helper(buf_s, buf);
+		if (is_newline_exist(buf_s))
+		{
+			char *line = extract_line_handler(buf_s);
+			char *temp = remove_extra_space_handler(buf_s);
+			free(buf_s);
+			buf_s = temp;
+			printf("line %d : %s\n" , i , line);
+			free(line);
+			i++;
+		}
+	}
+	close(fd);
+	free(buf);
+	free(buf_s);
+	printf("close the fd.\n");
+	return (0);
 }
