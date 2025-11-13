@@ -1,7 +1,32 @@
-Hello, world!
-This is a test file for get_next_line.
-It contains multiple lines
-some short
-and some longer lines that might cross your buffer size.
-The last line does not end with a newline
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus consectetur ultricies dapibus. Donec mattis, 
+neque vel interdum eleifend, orci nulla suscipit nunc, fringilla ornare dui magna et turpis. Nulla eget neque 
+vulputate justo posuere ultrices non in risus. Pellentesque venenatis turpis vel tristique sodales. Aenean purus odio,
+aliquet a tristique at, luctus nec erat. Integer et turpis ac erat rhoncus mollis. Donec nec ultrices turpis.
+In facilisis lacus at egestas posuere. Praesent nec ultrices elit. In hac habitasse platea dictumst.
+Nulla arcu risus, pulvinar in suscipit vitae, egestas vel justo. Morbi at libero venenatis, eleifend justo non,
+suscipit orci. Fusce a placerat nulla, et tincidunt urna. Phasellus feugiat massa a risus vehicula egestas.
+Maecenas pulvinar, nibh vel interdum placerat, dui dolor volutpat neque, eu lacinia arcu nulla efficitur neque.
+Phasellus vitae augue imperdiet, auctor turpis non, gravida arcu.
 
+Vivamus eget lacus sed nisl semper sollicitudin. Suspendisse elementum,
+enim in tincidunt vehicula, nisl nulla feugiat dui, a molestie urna justo sed tortor.
+Donec convallis nisl arcu, ac sollicitudin nisi viverra efficitur. Vestibulum aliquam pulvinar ullamcorper.
+Etiam feugiat nibh vitae finibus sollicitudin. Praesent et turpis eu sem finibus egestas at et neque.
+Curabitur viverra at nibh non egestas.
+
+Quisque nisi enim, congue ut fringilla nec, viverra vel risus. Pellentesque posuere leo at ligula scelerisque,
+vel lacinia nunc elementum. Nulla a feugiat sapien. Cras in tincidunt ipsum. Cras sagittis quis nibh vitae molestie.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque pretium nisi lorem, non dapibus neque egestas eu.
+Curabitur at vestibulum turpis, eget tincidunt neque. Aenean iaculis nisl vitae odio suscipit sagittis.
+
+Sed eu felis eros. Nulla vitae elit luctus, facilisis felis sed, tincidunt sapien. Duis sodales ullamcorper augue,
+ut finibus metus vulputate at. Morbi molestie fringilla urna. Integer sed metus vel lectus tempor maximus.
+Pellentesque bibendum vel nibh vitae tincidunt. Nam euismod tellus in tortor ultricies, aliquet venenatis arcu tristique.
+Duis semper a felis eget convallis. Fusce sollicitudin varius suscipit. Praesent at dolor sapien. Phasellus
+malesuada placerat tellus nec pharetra.
+
+Aliquam auctor aliquet malesuada. Donec vehicula velit dui, ut viverra ante dictum vitae. Morbi blandit,
+nisl tempus pellentesque efficitur, tortor eros pellentesque erat, rhoncus aliquet ante nunc non lorem.
+Nulla sit amet risus ligula. Proin a eros eget felis vestibulum pharetra. Etiam eget nulla nec purus gravida facilisis.
+Fusce urna libero, porta et gravida et, rhoncus sit amet ante. Pellentesque lacinia egestas ultricies.
+Etiam sagittis luctus orci non rhoncus. Aliquam egestas dolor at fringilla dapibus. Etiam ut semper ligula.

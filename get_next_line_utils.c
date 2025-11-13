@@ -112,6 +112,8 @@ char *extract_line_handler(char *buf_s)
 	int j;
 
 	i = 0;
+	if (!buf_s || buf_s[0] == '\0')
+		return (NULL);
 	while(buf_s[i] != '\0' && buf_s[i] != '\n')
 		i++;
 	if (buf_s[i] == '\n')

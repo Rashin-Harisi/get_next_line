@@ -39,10 +39,16 @@ char	*get_next_line(int fd)
             return (NULL);
         }
 		buf_s = join_helper(buf_s, buf);
+        if(!buf_s)
+        {
+            free(buf);
+            return (NULL);
+        }
     }
-    if (*buf_s == '\0' || !buf_s)
+    if (!buf_s || *buf_s == '\0')
     {
-        free(buf);
+        free(buf_s);
+        buf_s = NULL;
         return (NULL);
     }
 	line = extract_line_handler(buf_s);
@@ -50,6 +56,9 @@ char	*get_next_line(int fd)
 	free(buf_s);
 	buf_s = temp;
     free(buf);
-    return (line);
+    if (line && *line != '\0')
+        return (line);
+    else
+        return (NULL);
 }
 
