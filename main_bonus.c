@@ -6,12 +6,34 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 13:30:28 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/11/14 13:31:56 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/11/14 15:06:05 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
 #include <fcntl.h>
 #include "get_next_line_bonus.h"
+
+void free_fd_list(t_fd **fd_list)
+{
+    t_fd *curr = *fd_list;
+    t_fd *next;
+
+    while (curr)
+    {
+        next = curr->next;
+        if (curr->buf_s)
+            free(curr->buf_s);
+        free(curr);
+        curr = next;
+    }
+    *fd_list = NULL;
+}
+static t_fd *fd_list = NULL;
+t_fd **get_fd_list(void)
+{
+    extern t_fd *fd_list;
+    return &fd_list;
+}
 
 int main(void)
 {
@@ -60,6 +82,7 @@ int main(void)
         printf("You typed: %s", line);
         free(line);
     }
+    free_fd_list(get_fd_list());
 
     return 0;
 }
