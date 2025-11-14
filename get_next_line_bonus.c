@@ -5,7 +5,7 @@
 void 	delete_fd_node(t_fd **fd_list, int fd)
 {
 	t_fd *curr;
-	f_fd *prev;
+	t_fd *prev;
 	prev = NULL;
 	curr = *fd_list;
 	while (curr)
@@ -13,12 +13,12 @@ void 	delete_fd_node(t_fd **fd_list, int fd)
 		if(curr->fd == fd)
 		{
 			if (prev)
-				prev->next = cur->next;
+				prev->next = curr->next;
 			else //means it is the first node, so address of next would be replace as the address of head
 				*fd_list = curr->next;
 
 			if (curr->buf_s)
-				free(curr->bus_f);
+				free(curr->buf_s);
 			free(curr);
 			return ;
 		}
@@ -42,14 +42,9 @@ char *get_next_line(int fd)
 	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buf)
 		return (NULL);
-	if (sz <= 0)
-	{
-		free(buf);
-		return (NULL);
-	}
 	if (!fd_list) // fd_list is a pointer to the first node
 	{
-		fd_list = malloc(sizeof t_fd);
+		fd_list = malloc(sizeof(t_fd));
 		if (!fd_list)
 			return (NULL);
 		fd_list->fd = fd;
@@ -59,7 +54,7 @@ char *get_next_line(int fd)
 	node = fd_list; //we assign it to another variable because we always need the head of the list
 	while (node) // we find the node or reach at the end which means that this fd reads first time
 	{
-		if (node->fd == fd);
+		if (node->fd == fd)
 			break ;
 		if (node->next == NULL)
 			break ; //end node
@@ -78,7 +73,7 @@ char *get_next_line(int fd)
 		node->buf_s = NULL;
 		node->next = NULL;
 	}
-	while (!is_new_line_exist(node->buf_s) && sz > 0)
+	while (!is_newline_exist(node->buf_s) && sz > 0)
 	{
 		sz  = read_handler(fd,buf,BUFFER_SIZE);
 		if (sz < 0)
@@ -89,7 +84,7 @@ char *get_next_line(int fd)
 		}
 		node->buf_s = join_helper(node->buf_s, buf);
 	}
-	if (!node->buf_s || node->buf_s == '\0')
+	if (!node->buf_s || node->buf_s[0] == '\0')
 	{
 		delete_fd_node(&fd_list, fd);
 		return (NULL);

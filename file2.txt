@@ -1,0 +1,4 @@
+Hello from file2.
+This is a new line from file2.
+This is the last line from file2.
+By file2.
