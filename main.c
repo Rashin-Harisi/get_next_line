@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 16:56:02 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/11/11 17:11:52 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/11/15 21:22:48 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -63,12 +63,12 @@ int main(void){
 	    printf("%s", line);
 	    free(line);
 	}
-
-	printf("\nNow type something:\n");
-	while ((line = get_next_line(0)) != NULL)
-	{
-	    printf("stdin: %s", line);
-	    free(line);
-	}
+	
+	//printf("\nNow type something:\n");
+	//while ((line = get_next_line(0)) != NULL)
+	//{
+	    //printf("stdin: %s", line);
+	    //free(line);
+	//}
 	return 0;
 }

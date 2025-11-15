@@ -76,7 +76,6 @@ static char	*line_reading_handler(t_fd **node,char *buf, int fd,t_fd **fd_list)
 		sz = read(fd, buf, BUFFER_SIZE);
 		if (sz <= 0)
 		{
-			free(buf);
 			delete_fd_node(fd_list,fd);
 			return (NULL);
 		}
@@ -91,7 +90,7 @@ static char	*line_reading_handler(t_fd **node,char *buf, int fd,t_fd **fd_list)
 	line = extract_line_handler((*node)->buf_s);
 	temp = remove_extra_space_handler((*node)->buf_s);
 	free((*node)->buf_s);
-	(*node)->buf_s = temp;
+	(*node)->buf_s = temp;	
 	return (line);
 }
 
