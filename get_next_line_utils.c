@@ -6,28 +6,18 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 16:03:33 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/11/10 16:03:33 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/11/15 16:48:05 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
 
-int	read_handler(int fd,char *buf, int n)
-{
-	int sz;
-
-	sz = read(fd, buf, n);
-	if (sz >= 0)
-		buf[sz] = '\0';
-	return (sz);
-}
-
 int	is_newline_exist(char *buf)
 {
-	int i;
+	int	i;
 
 	i = 0;
-    if (buf == NULL)
-        return (0);
+	if (buf == NULL)
+		return (0);
 	while (buf[i] != '\0')
 	{
 		if (buf[i] == '\n')
@@ -39,8 +29,8 @@ int	is_newline_exist(char *buf)
 
 int	ft_strlen(char *str)
 {
-	int count;
-	int i;
+	int	count;
+	int	i;
 
 	count = 0;
 	i = 0;
@@ -54,45 +44,40 @@ int	ft_strlen(char *str)
 
 char	*join_helper(char *buf_s, char *buf)
 {
-	char *new;
-	int i,j;
+	char	*new;
+	int		i;
+	int		j;
 
 	if (!buf_s)
 	{
 		buf_s = malloc(1 * sizeof(char));
-		if(!buf_s)
+		if (!buf_s)
 			return (NULL);
 		buf_s[0] = '\0';
 	}
 	new = malloc((ft_strlen(buf) + ft_strlen(buf_s)+1) * sizeof(char));
 	if (!new)
 		return (NULL);
-	j = 0;
-	while (buf_s[j] != '\0')
-	{
+	j = -1;
+	while (buf_s[++j] != '\0')
 		new[j] = buf_s[j];
-		j++;
-	}
 	i = 0;
 	while (buf[i] != '\0')
-	{
-		new[j] = buf[i];
-		i++;
-		j++;
-	}
+		new[j++] = buf[i++];
 	new[j] = '\0';
 	free(buf_s);
-	return (new);	
+	return (new);
 }
 
 char	*remove_extra_space_handler(char *buf)
 {
-	char *new;
-	int i,j;
+	char	*new;
+	int		i;
+	int		j;
 
 	i = 0;
 	j = 0;
-	while(buf[i] != '\0' && buf[i] != '\n')
+	while (buf[i] != '\0' && buf[i] != '\n')
 		i++;
 	if (buf[i] == '\n')
 		i++;
@@ -105,16 +90,16 @@ char	*remove_extra_space_handler(char *buf)
 	return (new);
 }
 
-char *extract_line_handler(char *buf_s)
+char	*extract_line_handler(char *buf_s)
 {
-	char *line;
-	int i;
-	int j;
+	char	*line;
+	int		i;
+	int		j;
 
 	i = 0;
 	if (!buf_s || buf_s[0] == '\0')
 		return (NULL);
-	while(buf_s[i] != '\0' && buf_s[i] != '\n')
+	while (buf_s[i] != '\0' && buf_s[i] != '\n')
 		i++;
 	if (buf_s[i] == '\n')
 		i++;

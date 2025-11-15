@@ -6,13 +6,14 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 13:30:28 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/11/14 15:06:05 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/11/15 20:35:24 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
 #include <fcntl.h>
 #include "get_next_line_bonus.h"
 
+// Function to free all remaining nodes in fd_list
 void free_fd_list(t_fd **fd_list)
 {
     t_fd *curr = *fd_list;
@@ -28,17 +29,15 @@ void free_fd_list(t_fd **fd_list)
     }
     *fd_list = NULL;
 }
-static t_fd *fd_list = NULL;
-t_fd **get_fd_list(void)
-{
-    extern t_fd *fd_list;
-    return &fd_list;
-}
 
 int main(void)
 {
     int fd1, fd2;
-    char *line;
+    char *line1;
+    char *line2;
+    char *line3;
+    int fd1_done = 0;
+    int fd2_done = 0;
 
     // Open two test files
     fd1 = open("file1.txt", O_RDONLY);
@@ -52,24 +51,32 @@ int main(void)
 
     printf("Reading alternately from two files:\n\n");
 
-    while (1)
+    // Loop until both files are done
+    while (!fd1_done || !fd2_done)
     {
-        line = get_next_line(fd1);
-        if (line)
+        if (!fd1_done)
         {
-            printf("FD1: %s", line);
-            free(line);
+            line1 = get_next_line(fd1);
+            if (line1)
+            {
+                printf("FD1: %s", line1);
+                free(line1);
+            }
+            else
+                fd1_done = 1;
         }
 
-        line = get_next_line(fd2);
-        if (line)
+        if (!fd2_done)
         {
-            printf("FD2: %s", line);
-            free(line);
+            line2 = get_next_line(fd2);
+            if (line2)
+            {
+                printf("FD2: %s", line2);
+                free(line2);
+            }
+            else
+                fd2_done = 1;
         }
-
-        if (!line && !get_next_line(fd1)) // both finished
-            break;
     }
 
     close(fd1);
@@ -77,14 +84,18 @@ int main(void)
 
     printf("\nReading from standard input (stdin):\n");
     printf("Type something and press Enter. Ctrl+D to end.\n");
-    while ((line = get_next_line(0)) != NULL)
+
+    // Read from stdin until EOF
+    while ((line3 = get_next_line(0)) != NULL)
     {
-        printf("You typed: %s", line);
-        free(line);
+        printf("You typed: %s", line3);
+        free(line3);
     }
-    free_fd_list(get_fd_list());
+
+    // Free any remaining nodes in fd_list
+   // extern t_fd *fd_list; // make sure this matches your static fd_list in GNL
+   // free_fd_list(&fd_list);
 
     return 0;
 }
-
 

@@ -1,98 +1,106 @@
-#include "get_next_line.h"
 #include "get_next_line_bonus.h"
 
-
-void create_first_node(t_fd **fd_list, int fd)
+int	is_newline_exist(char *buf)
 {
-	if (*fd_list == NULL)
+	int	i;
+
+	i = 0;
+	if (buf == NULL)
+		return (0);
+	while (buf[i] != '\0')
 	{
-    		*fd_list = malloc(sizeof(t_fd));
-    		if (!*fd_list)
-        		return ;
-    		(*fd_list)->fd = fd;
-    		(*fd_list)->buf_s = NULL;
-    		(*fd_list)->next = NULL;
+		if (buf[i] == '\n')
+			return (1);
+		i++;
 	}
+	return (0);
 }
 
-// deleting nof, because reading function reached at the end or get errors
-void 	delete_fd_node(t_fd **fd_list, int fd)
+int	ft_strlen(char *str)
 {
-	t_fd *curr;
-	t_fd *prev;
-    
-	prev = NULL;
-	curr = *fd_list;
-	while (curr)
+	int	count;
+	int	i;
+
+	count = 0;
+	i = 0;
+	while (str[i] != '\0')
 	{
-		if(curr->fd == fd)
-		{
-			if (prev)
-				prev->next = curr->next;
-			else //means it is the first node, so address of next would be replace as the address of head
-				*fd_list = curr->next;
-			if (curr->buf_s)
-				free(curr->buf_s);
-			free(curr);
-			return ;
-		}
-		prev = curr; // node curr is not the desired node for deleteing, so save it in another node and go to the next node 
-		curr = curr->next;
+		i++;
+		count++;
 	}
+	return (count);
 }
 
-t_fd	*find_the_node_helper(t_fd **fd_list, int fd)
+char	*join_helper(char *buf_s, char *buf)
 {
-	t_fd *node;
+	char	*new;
+	int		i;
+	int		j;
 
-	node = *fd_list; //we assign it to another variable because we always need the head of the list
-	while (node) // we find the node or reach at the end which means that this fd reads first time
+	if (!buf_s)
 	{
-		if (node->fd == fd)
-			break ;
-		if (node->next == NULL)
-			break ; //end node
-		node = node->next;
-	}
-	if (node->fd != fd) // means we reached at the end so we create a node and add it at the end of list
-	{
-		node->next = malloc(sizeof(t_fd));
-		if (!node->next)
+		buf_s = malloc(1 * sizeof(char));
+		if (!buf_s)
 			return (NULL);
-		node = node->next;
-		node->fd = fd;
-		node->buf_s = NULL;
-		node->next = NULL;
+		buf_s[0] = '\0';
 	}
-	return (node);
-}
-
-char *line_reading_handler(t_fd **node,char *buf, int fd,t_fd **fd_list)
-{
-	int sz;
-	char *line;
-	char *temp;
-
-	sz = 1;
-	while (!is_newline_exist((*node)->buf_s) && sz > 0)
-	{
-		sz  = read_handler(fd,buf,BUFFER_SIZE);
-		if (sz < 0)
-		{
-			free(buf);
-			delete_fd_node(fd_list,fd);
-			return (NULL);
-		}
-		(*node)->buf_s = join_helper((*node)->buf_s, buf);
-	}
-	if (!(*node)->buf_s || (*node)->buf_s[0] == '\0')
-	{
-		delete_fd_node(fd_list, fd);
+	new = malloc((ft_strlen(buf) + ft_strlen(buf_s)+1) * sizeof(char));
+	if (!new)
 		return (NULL);
+	j = -1;
+	while (buf_s[++j] != '\0')
+		new[j] = buf_s[j];
+	i = 0;
+	while (buf[i] != '\0')
+		new[j++] = buf[i++];
+	new[j] = '\0';
+	free(buf_s);
+	return (new);
+}
+
+char	*remove_extra_space_handler(char *buf)
+{
+	char	*new;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (buf[i] != '\0' && buf[i] != '\n')
+		i++;
+	if (buf[i] == '\n')
+		i++;
+	new = malloc((ft_strlen(buf + i) + 1) * sizeof(char));
+	if (!new)
+		return (NULL);
+	while (buf[i] != '\0')
+		new[j++] = buf[i++];
+	new[j] = '\0';
+	return (new);
+}
+
+char	*extract_line_handler(char *buf_s)
+{
+	char	*line;
+	int		i;
+	int		j;
+
+	i = 0;
+	if (!buf_s || buf_s[0] == '\0')
+		return (NULL);
+	while (buf_s[i] != '\0' && buf_s[i] != '\n')
+		i++;
+	if (buf_s[i] == '\n')
+		i++;
+	line = malloc((i + 1) * sizeof(char));
+	if (!line)
+		return (NULL);
+	j = 0;
+	while (j < i)
+	{
+		line[j] = buf_s[j];
+		j++;
 	}
-	line = extract_line_handler((*node)->buf_s);
-	temp = remove_extra_space_handler((*node)->buf_s);
-	free((*node)->buf_s);
-	(*node)->buf_s = temp;
+	line[j] = '\0';
 	return (line);
 }
