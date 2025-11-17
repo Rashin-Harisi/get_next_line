@@ -91,12 +91,17 @@ static char	*line_reading_handler(t_fd **node,char *buf, int fd,t_fd **fd_list)
 	while (!is_newline_exist((*node)->buf_s))
 	{
 		sz = read(fd, buf, BUFFER_SIZE);
-		if (sz <= 0)
+		if (sz < 0)
 		{
-			if ((*node)->buf_s && *(*node)->buf_s)
-				break ;
 			delete_fd_node(fd_list,fd);
 			return (NULL);
+		}
+		if (sz == 0)
+		{
+			if ((*node)->buf_s && *(*node)->buf_s)
+                break ;
+			delete_fd_node(fd_list,fd);
+            return (NULL);
 		}
 		buf[sz] = '\0';
 		temp_s = join_helper((*node)->buf_s, buf);
