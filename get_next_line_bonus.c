@@ -39,6 +39,22 @@ static void	delete_fd_node(t_fd **fd_list, int fd)
 	}
 }
 
+void	free_all_list_handler(t_fd *fd_list)
+{
+	t_fd	*curr;
+	t_fd	*next;
+
+	curr = fd_list;
+	while (curr)
+	{
+		next = curr->next;
+		if (curr->buf_s)
+			free(curr->buf_s);
+		free(curr);
+		curr = next;
+	}
+}
+
 static t_fd	*find_the_node_helper(t_fd **fd_list, int fd)
 {
 	t_fd	*node;
@@ -70,17 +86,27 @@ static char	*line_reading_handler(t_fd **node,char *buf, int fd,t_fd **fd_list)
 	char	*line;
 	char	*temp;
 	int		sz;
+	char	*temp_s;
 
 	while (!is_newline_exist((*node)->buf_s))
 	{
 		sz = read(fd, buf, BUFFER_SIZE);
 		if (sz <= 0)
 		{
+			if ((*node)->buf_s && *(*node)->buf_s)
+				break ;
 			delete_fd_node(fd_list,fd);
 			return (NULL);
 		}
 		buf[sz] = '\0';
-		(*node)->buf_s = join_helper((*node)->buf_s, buf);
+		temp_s = join_helper((*node)->buf_s, buf);
+		if (!temp_s)
+		{
+				(*node)->buf_s = NULL;
+				delete_fd_node(fd_list, fd);
+				return (NULL);
+		}
+		(*node)->buf_s = temp_s;
 	}
 	if (!(*node)->buf_s || (*node)->buf_s[0] == '\0')
 	{
@@ -88,7 +114,18 @@ static char	*line_reading_handler(t_fd **node,char *buf, int fd,t_fd **fd_list)
 		return (NULL);
 	}
 	line = extract_line_handler((*node)->buf_s);
+	if (!line)
+	{
+		delete_fd_node(fd_list, fd);
+		return (NULL);
+	}
 	temp = remove_extra_space_handler((*node)->buf_s);
+	if (!temp)
+	{
+		free(line);
+		delete_fd_node(fd_list, fd);	
+		return (NULL);
+	}
 	free((*node)->buf_s);
 	(*node)->buf_s = temp;
 	return (line);
@@ -105,12 +142,23 @@ char	*get_next_line(int fd)
 		return (NULL);
 	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buf)
+	{
+		if (fd_list)
+			delete_fd_node(&fd_list, fd);
 		return (NULL);
+	}
 	create_first_node(&fd_list, fd);
+	if (!fd_list)
+	{
+		free(buf);
+		return (NULL);
+	}
 	node = find_the_node_helper(&fd_list , fd);
 	if (!node)
 	{
 		free(buf);
+		//free_all_list_handler(fd_list);
+		//fd_list = NULL;
 		return (NULL);
 	}
 	line = line_reading_handler(&node, buf, fd, &fd_list);
