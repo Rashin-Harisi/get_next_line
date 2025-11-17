@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 13:30:28 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/11/15 21:18:03 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/11/17 12:37:14 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -82,19 +82,19 @@ int main(void)
     close(fd1);
     close(fd2);
 
-    //printf("\nReading from standard input (stdin):\n");
-    //printf("Type something and press Enter. Ctrl+D to end.\n");
+    printf("\nReading from standard input (stdin):\n");
+    printf("Type something and press Enter. Ctrl+D to end.\n");
 
     // Read from stdin until EOF
-    //while ((line3 = get_next_line(0)) != NULL)
-    //{
-    //    printf("You typed: %s", line3);
-    //    free(line3);
-    //}
+    while ((line3 = get_next_line(0)) != NULL)
+    {
+        printf("You typed: %s", line3);
+        free(line3);
+   }
 
-    // Free any remaining nodes in fd_list
-   // extern t_fd *fd_list; // make sure this matches your static fd_list in GNL
-   // free_fd_list(&fd_list);
+    //Free any remaining nodes in fd_list
+    //extern t_fd *fd_list; // make sure this matches your static fd_list in GNL
+   //free_fd_list(&fd_list);
 
     return 0;
 }

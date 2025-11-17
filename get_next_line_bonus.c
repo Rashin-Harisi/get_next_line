@@ -90,7 +90,7 @@ static char	*line_reading_handler(t_fd **node,char *buf, int fd,t_fd **fd_list)
 	line = extract_line_handler((*node)->buf_s);
 	temp = remove_extra_space_handler((*node)->buf_s);
 	free((*node)->buf_s);
-	(*node)->buf_s = temp;	
+	(*node)->buf_s = temp;
 	return (line);
 }
 

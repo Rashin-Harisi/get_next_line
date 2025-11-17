@@ -46,7 +46,10 @@ char	*join_helper(char *buf_s, char *buf)
 	}
 	new = malloc((ft_strlen(buf) + ft_strlen(buf_s)+1) * sizeof(char));
 	if (!new)
+	{
+		free(buf_s);
 		return (NULL);
+	}
 	j = -1;
 	while (buf_s[++j] != '\0')
 		new[j] = buf_s[j];
