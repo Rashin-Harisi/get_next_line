@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:40:24 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/11/18 13:33:04 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/11/18 14:27:01 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -79,6 +79,7 @@ static char	*line_reading_handler(t_fd **node, char *buf,
 	int fd, t_fd **fd_list)
 {
 	char	*line;
+	char	*temp;
 	int		sz;
 
 	while (!is_newline_exist((*node)->buf_s))
@@ -88,19 +89,34 @@ static char	*line_reading_handler(t_fd **node, char *buf,
 		{
 			if (sz == 0 && ((*node)->buf_s && *(*node)->buf_s))
 				break ;
-			return (delete_fd_node(fd_list, fd), NULL);
+			delete_fd_node(fd_list, fd);
+			return (NULL);
 		}
 		buf[sz] = '\0';
-		(*node)->buf_s = join_helper((*node)->buf_s, buf);
-		if (!(*node)->buf_s)
-			return (delete_fd_node(fd_list, fd), NULL);
+		temp = join_helper((*node)->buf_s, buf);
+		if (!temp)
+		{
+			(*node)->buf_s = NULL;
+			delete_fd_node(fd_list, fd);
+			return (NULL);
+		}
+		(*node)->buf_s = temp;
 	}
 	if (!(*node)->buf_s || (*node)->buf_s[0] == '\0')
-		return (delete_fd_node(fd_list, fd), NULL);
+	{
+		delete_fd_node(fd_list, fd);
+		return (NULL);
+	}
 	line = extract_line_handler((*node)->buf_s);
-	(*node)->buf_s = remove_extra_space_handler((*node)->buf_s);
-	if (!line || !(*node)->buf_s)
-		return (free(line), delete_fd_node(fd_list, fd), NULL);
+	temp = remove_extra_space_handler((*node)->buf_s);
+	if (!line || !temp)
+	{
+		free(line);
+		delete_fd_node(fd_list, fd);
+		return (NULL);
+	}
+	free((*node)->buf_s);
+	(*node)->buf_s = temp;
 	return (line);
 }
 
@@ -122,10 +138,16 @@ char	*get_next_line(int fd)
 	}
 	create_first_node(&fd_list, fd);
 	if (!fd_list)
-		return (free(buf), NULL);
+	{
+		free(buf);
+		return (NULL);
+	}
 	node = find_the_node_helper(&fd_list, fd);
 	if (!node)
-		return (free(buf), NULL);
+	{
+		free(buf);
+		return (NULL);
+	}
 	line = line_reading_handler(&node, buf, fd, &fd_list);
 	free(buf);
 	if (line && *line != '\0')

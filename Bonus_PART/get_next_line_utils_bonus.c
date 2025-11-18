@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:44:12 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/11/18 13:05:00 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/11/18 14:18:31 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -57,7 +57,10 @@ char	*join_helper(char *buf_s, char *buf)
 	}
 	new = malloc((ft_strlen(buf) + ft_strlen(buf_s)+1) * sizeof(char));
 	if (!new)
-		return (free(buf_s), NULL);
+	{
+		free(buf_s);
+		return (NULL);
+	}
 	j = -1;
 	while (buf_s[++j] != '\0')
 		new[j] = buf_s[j];
