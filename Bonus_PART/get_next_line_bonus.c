@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:40:24 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/11/18 14:27:01 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/11/19 13:40:30 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -24,7 +24,7 @@ static void	create_first_node(t_fd **fd_list, int fd)
 	}
 }
 
-static void	delete_fd_node(t_fd **fd_list, int fd)
+void	delete_fd_node(t_fd **fd_list, int fd)
 {
 	t_fd	*curr;
 	t_fd	*prev;
@@ -82,38 +82,29 @@ static char	*line_reading_handler(t_fd **node, char *buf,
 	char	*temp;
 	int		sz;
 
-	while (!is_newline_exist((*node)->buf_s))
+	while (!merge_newline_strlen((*node)->buf_s, 1))
 	{
 		sz = read(fd, buf, BUFFER_SIZE);
 		if (sz <= 0)
 		{
 			if (sz == 0 && ((*node)->buf_s && *(*node)->buf_s))
 				break ;
-			delete_fd_node(fd_list, fd);
-			return (NULL);
+			return (cleanup_handler(2, fd_list, fd, NULL));
 		}
 		buf[sz] = '\0';
 		temp = join_helper((*node)->buf_s, buf);
 		if (!temp)
-		{
-			(*node)->buf_s = NULL;
-			delete_fd_node(fd_list, fd);
-			return (NULL);
-		}
+			return (cleanup_handler(2, fd_list, fd, NULL));
 		(*node)->buf_s = temp;
 	}
 	if (!(*node)->buf_s || (*node)->buf_s[0] == '\0')
-	{
-		delete_fd_node(fd_list, fd);
-		return (NULL);
-	}
+		return (cleanup_handler(2, fd_list, fd, NULL));
 	line = extract_line_handler((*node)->buf_s);
 	temp = remove_extra_space_handler((*node)->buf_s);
 	if (!line || !temp)
 	{
 		free(line);
-		delete_fd_node(fd_list, fd);
-		return (NULL);
+		return (cleanup_handler(2, fd_list, fd, NULL));
 	}
 	free((*node)->buf_s);
 	(*node)->buf_s = temp;
@@ -131,23 +122,13 @@ char	*get_next_line(int fd)
 		return (NULL);
 	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buf)
-	{
-		if (fd_list)
-			delete_fd_node(&fd_list, fd);
-		return (NULL);
-	}
+		return (cleanup_handler(2, &fd_list, fd, NULL));
 	create_first_node(&fd_list, fd);
 	if (!fd_list)
-	{
-		free(buf);
-		return (NULL);
-	}
+		return (cleanup_handler(1, NULL, 0, buf));
 	node = find_the_node_helper(&fd_list, fd);
 	if (!node)
-	{
-		free(buf);
-		return (NULL);
-	}
+		return (cleanup_handler(1, NULL, 0, buf));
 	line = line_reading_handler(&node, buf, fd, &fd_list);
 	free(buf);
 	if (line && *line != '\0')

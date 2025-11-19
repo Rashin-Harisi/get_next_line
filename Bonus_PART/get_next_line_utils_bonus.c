@@ -6,40 +6,40 @@
 /*   By: rabdolho <rabdolho@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:44:12 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/11/18 14:18:31 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/11/19 13:08:51 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
 
-int	is_newline_exist(char *buf)
+int	merge_newline_strlen(char *s, int flag)
 {
 	int	i;
 
-	i = 0;
-	if (buf == NULL)
+	if (!s)
 		return (0);
-	while (buf[i] != '\0')
+	i = 0;
+	if (flag == 1)
 	{
-		if (buf[i] == '\n')
-			return (1);
-		i++;
+		while (s[i] != '\0')
+		{
+			if (s[i] == '\n')
+				return (1);
+			i++;
+		}
+		return (0);
 	}
-	return (0);
+	while (s[i] != '\0')
+		i++;
+	return (i);
 }
 
-int	ft_strlen(char *str)
+char	*cleanup_handler(int flag, t_fd **fd_list, int fd, void *buf_s)
 {
-	int	count;
-	int	i;
-
-	count = 0;
-	i = 0;
-	while (str[i] != '\0')
-	{
-		i++;
-		count++;
-	}
-	return (count);
+	if (flag == 1)
+		free(buf_s);
+	else if (flag == 2)
+		delete_fd_node(fd_list, fd);
+	return (NULL);
 }
 
 char	*join_helper(char *buf_s, char *buf)
@@ -55,12 +55,10 @@ char	*join_helper(char *buf_s, char *buf)
 			return (NULL);
 		buf_s[0] = '\0';
 	}
-	new = malloc((ft_strlen(buf) + ft_strlen(buf_s)+1) * sizeof(char));
+	new = malloc((merge_newline_strlen(buf, 0)
+				+ merge_newline_strlen(buf_s, 0) + 1) * sizeof(char));
 	if (!new)
-	{
-		free(buf_s);
-		return (NULL);
-	}
+		return (cleanup_handler(1, NULL, 0, buf_s));
 	j = -1;
 	while (buf_s[++j] != '\0')
 		new[j] = buf_s[j];
@@ -84,7 +82,7 @@ char	*remove_extra_space_handler(char *buf)
 		i++;
 	if (buf[i] == '\n')
 		i++;
-	new = malloc((ft_strlen(buf + i) + 1) * sizeof(char));
+	new = malloc((merge_newline_strlen(buf + i, 0) + 1) * sizeof(char));
 	if (!new)
 		return (NULL);
 	while (buf[i] != '\0')
