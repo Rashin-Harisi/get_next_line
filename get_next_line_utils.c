@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 16:03:33 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/11/17 14:30:22 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/11/18 12:22:17 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -55,12 +55,9 @@ char	*join_helper(char *buf_s, char *buf)
 			return (NULL);
 		buf_s[0] = '\0';
 	}
-	new = malloc((ft_strlen(buf) + ft_strlen(buf_s)+1) * sizeof(char));
+	new = malloc((ft_strlen(buf) + ft_strlen(buf_s) + 1) * sizeof(char));
 	if (!new)
-	{
-		free(buf_s);
-		return (NULL);
-	}
+		return (free_and_null_handler(&buf_s));
 	j = -1;
 	while (buf_s[++j] != '\0')
 		new[j] = buf_s[j];

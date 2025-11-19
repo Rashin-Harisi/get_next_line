@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 16:03:12 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/11/17 14:46:23 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/11/18 13:55:10 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -21,6 +21,14 @@ static int	read_handler(int fd, char *buf, int n)
 	return (sz);
 }
 
+char	*free_and_null_handler(char **buf_s)
+{
+	if (*buf_s)
+		free(*buf_s);
+	*buf_s = NULL;
+	return (NULL);
+}
+
 static char	*buf_s_update_handler(char **buf_s, char *buf, int fd)
 {
 	int		sz;
@@ -31,11 +39,7 @@ static char	*buf_s_update_handler(char **buf_s, char *buf, int fd)
 	{
 		sz = read_handler(fd, buf, BUFFER_SIZE);
 		if (sz < 0)
-		{
-			free(*buf_s);
-			*buf_s = NULL;
-			return (NULL);
-		}
+			return (free_and_null_handler(buf_s));
 		temp = join_helper(*buf_s, buf);
 		if (!temp)
 		{
@@ -45,11 +49,7 @@ static char	*buf_s_update_handler(char **buf_s, char *buf, int fd)
 		*buf_s = temp;
 	}
 	if (!(*buf_s) || *(*buf_s) == '\0')
-	{
-		free(*buf_s);
-		*buf_s = NULL;
-		return (NULL);
-	}
+		return (free_and_null_handler(buf_s));
 	return (*buf_s);
 }
 
@@ -90,14 +90,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buf)
-	{
-		if (buf_s)
-		{
-			free(buf_s);
-			buf_s = NULL;
-		}
-		return (NULL);
-	}
+		return (free_and_null_handler(&buf_s));
 	if (!buf_s_update_handler(&buf_s, buf, fd))
 	{
 		free(buf);
@@ -107,6 +100,5 @@ char	*get_next_line(int fd)
 	free(buf);
 	if (line && *line != '\0')
 		return (line);
-	else
-		return (NULL);
+	return (NULL);
 }
